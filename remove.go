@@ -9,8 +9,14 @@ import (
 )
 
 // Remove removes the named file or (empty) directory.
-func (c *Client) Remove(name string) error {
-	return delete(c, name, false)
+func (c *Client) Remove(name string, flags ...Flag) error {
+	flag := mergeFlags(flags)
+	flagRecursive := true
+	if flag&NoRecursive != 0 {
+		flagRecursive = false
+	}
+
+	return delete(c, name, flagRecursive)
 }
 
 // RemoveAll removes path and any children it contains. It removes everything it
